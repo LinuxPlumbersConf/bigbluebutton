@@ -6,7 +6,6 @@ import injectWbResizeEvent from '/imports/ui/components/presentation/resize-wrap
 import Button from '/imports/ui/components/button/component';
 import NoteService from './service';
 import { styles } from './styles';
-import Users from '/imports/api/users';
 import Auth from '/imports/ui/services/auth';
 
 const intlMessages = defineMessages({
@@ -52,16 +51,8 @@ class Note extends Component {
     } = this.props;
 
     // const url = isLocked ? this.readOnlyURL : this.noteURL;
-    const currentUser = Users.findOne({
-      meetingId: Auth.meetingID,
-      userId: Auth.userID,
-    }, {
-      fields: {
-        name: 1,
-      },
-    });
-
-    const matrixurl = `/riot-embedded/index.html?urluserid=${currentUser.name}`;
+    const matrixtitle = `Matrix integration for ${Auth.confname}`;
+    const matrixurl = `/riot-embedded/index.html?urluserid=${Auth.fullname}`;
     return (
       <div
         data-test="note"
@@ -86,7 +77,7 @@ class Note extends Component {
           </div>
         </header>
         <iframe
-          title="Test Matrix integration for LPC2021"
+          title={matrixtitle}
           src={matrixurl}
           aria-describedby="sharedNotesEscapeHint"
         />
