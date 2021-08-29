@@ -98,7 +98,7 @@ class UserNotes extends Component {
         onClick={NoteService.toggleNotePanel}
         onKeyPress={() => { }}
       >
-        <Icon iconName="copy" />
+        <Icon iconName="group_chat" />
         <div aria-hidden>
           <div className={styles.noteTitle} data-test="sharedNotes">
             {intl.formatMessage(intlMessages.sharedNotes)}
