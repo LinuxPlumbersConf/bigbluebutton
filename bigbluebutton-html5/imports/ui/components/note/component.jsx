@@ -6,6 +6,8 @@ import injectWbResizeEvent from '/imports/ui/components/presentation/resize-wrap
 import Button from '/imports/ui/components/button/component';
 import NoteService from './service';
 import { styles } from './styles';
+import Users from '/imports/api/users';
+import Auth from '/imports/ui/services/auth';
 
 const intlMessages = defineMessages({
   hideNoteLabel: {
@@ -23,7 +25,7 @@ const intlMessages = defineMessages({
 });
 
 const propTypes = {
-  isLocked: PropTypes.bool.isRequired,
+  // isLocked: PropTypes.bool.isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func.isRequired,
   }).isRequired,
@@ -44,12 +46,22 @@ class Note extends Component {
 
   render() {
     const {
-      isLocked,
+      // isLocked,
       intl,
       isRTL,
     } = this.props;
 
-    const url = isLocked ? this.readOnlyURL : this.noteURL;
+    // const url = isLocked ? this.readOnlyURL : this.noteURL;
+    const currentUser = Users.findOne({
+      meetingId: Auth.meetingID,
+      userId: Auth.userID,
+    }, {
+      fields: {
+        name: 1,
+      },
+    });
+
+    const matrixurl = `/riot-embedded/index.html?urluserid=${currentUser.name}`;
     return (
       <div
         data-test="note"
@@ -74,8 +86,8 @@ class Note extends Component {
           </div>
         </header>
         <iframe
-          title="etherpad"
-          src={url}
+          title="Test Matrix integration for LPC2021"
+          src={matrixurl}
           aria-describedby="sharedNotesEscapeHint"
         />
         <span id="sharedNotesEscapeHint" className={styles.hint} aria-hidden>
