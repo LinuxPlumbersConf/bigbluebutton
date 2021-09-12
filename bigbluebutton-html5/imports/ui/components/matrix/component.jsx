@@ -4,22 +4,22 @@ import { Session } from 'meteor/session';
 import { defineMessages, injectIntl } from 'react-intl';
 import injectWbResizeEvent from '/imports/ui/components/presentation/resize-wrapper/component';
 import Button from '/imports/ui/components/button/component';
-import NoteService from './service';
+import MatrixService from './service';
 import { styles } from './styles';
 import Auth from '/imports/ui/services/auth';
 import Meetings from '/imports/api/meetings';
 
 const intlMessages = defineMessages({
-  hideNoteLabel: {
-    id: 'app.note.hideNoteLabel',
-    description: 'Label for hiding note button',
+  hideMatrixLabel: {
+    id: 'app.matrix.hideMatrixLabel',
+    description: 'Label for hiding matrix button',
   },
   title: {
-    id: 'app.note.title',
-    description: 'Title for the shared notes',
+    id: 'app.matrix.title',
+    description: 'Title for Matrix',
   },
   tipLabel: {
-    id: 'app.note.tipLabel',
+    id: 'app.matrix.tipLabel',
     description: 'Label for tip on how to escape iframe',
   },
 });
@@ -29,19 +29,18 @@ const propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func.isRequired,
   }).isRequired,
+  isRTL: PropTypes.bool.isRequired,
 };
 
-class Note extends Component {
+class Matrix extends Component {
   constructor(props) {
     super(props);
 
-    this.noteURL = NoteService.getNoteURL();
-    this.readOnlyURL = NoteService.getReadOnlyURL();
+    this.matrixURL = MatrixService.getMatrixURL();
   }
 
   componentWillUnmount() {
-    const revs = NoteService.getRevs();
-    NoteService.setLastRevs(revs);
+  //  const beingUnmounted = 'Discovering component calls';
   }
 
   render() {
@@ -58,17 +57,16 @@ class Note extends Component {
 
     const matrixRoomID = prop.metadata ? prop.metadata.matrixroomid : null;
 
-    // const url = isLocked ? this.readOnlyURL : this.noteURL;
     const matrixtitle = `Matrix integration for ${Auth.confname}`;
     const matrixurl = `/riot-embedded/index.html?urlroomid=${matrixRoomID}&urluserid=${Auth.fullname}`;
     return (
       <div
-        data-test="note"
-        className={styles.note}
+        data-test="matrix"
+        className={styles.matrix}
       >
         <header className={styles.header}>
           <div
-            data-test="noteTitle"
+            data-test="matrixTitle"
             className={styles.title}
           >
             <Button
@@ -76,8 +74,8 @@ class Note extends Component {
                 Session.set('openPanel', 'userlist');
                 window.dispatchEvent(new Event('panelChanged'));
               }}
-              data-test="hideNoteLabel"
-              aria-label={intl.formatMessage(intlMessages.hideNoteLabel)}
+              data-test="hideMatrixLabel"
+              aria-label={intl.formatMessage(intlMessages.hideMatrixLabel)}
               label={intl.formatMessage(intlMessages.title)}
               icon={isRTL ? 'right_arrow' : 'left_arrow'}
               className={styles.hideBtn}
@@ -87,9 +85,9 @@ class Note extends Component {
         <iframe
           title={matrixtitle}
           src={matrixurl}
-          aria-describedby="sharedNotesEscapeHint"
+          aria-describedby="MatrixEscapeHint"
         />
-        <span id="sharedNotesEscapeHint" className={styles.hint} aria-hidden>
+        <span id="MatrixEscapeHint" className={styles.hint} aria-hidden>
           {intl.formatMessage(intlMessages.tipLabel)}
         </span>
       </div>
@@ -97,6 +95,6 @@ class Note extends Component {
   }
 }
 
-Note.propTypes = propTypes;
+Matrix.propTypes = propTypes;
 
-export default injectWbResizeEvent(injectIntl(Note));
+export default injectWbResizeEvent(injectIntl(Matrix));

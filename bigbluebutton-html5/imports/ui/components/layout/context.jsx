@@ -23,6 +23,9 @@ const initialState = {
   chatSize: {
     width: 0,
   },
+  matrixSize: {
+    width: 0,
+  },
   noteSize: {
     width: 0,
   },
@@ -114,6 +117,14 @@ const reducer = (state, action) => {
       return {
         ...state,
         chatSize: {
+          width: action.value.width,
+        },
+      };
+    }
+    case 'setMatrixSize': {
+      return {
+        ...state,
+        matrixSize: {
           width: action.value.width,
         },
       };
@@ -274,20 +285,20 @@ const ContextProvider = (props) => {
   );
 };
 
-const withProvider = Component => props => (
+const withProvider = (Component) => (props) => (
   <ContextProvider {...props}>
     <Component />
   </ContextProvider>
 );
 
-const ContextConsumer = Component => props => (
+const ContextConsumer = (Component) => (props) => (
   <LayoutContext.Consumer>
-    {contexts => <Component {...props} {...contexts} />}
+    {(contexts) => <Component {...props} {...contexts} />}
   </LayoutContext.Consumer>
 );
 
-const withLayoutConsumer = Component => ContextConsumer(Component);
-const withLayoutContext = Component => withProvider(withLayoutConsumer(Component));
+const withLayoutConsumer = (Component) => ContextConsumer(Component);
+const withLayoutContext = (Component) => withProvider(withLayoutConsumer(Component));
 
 export {
   withProvider,

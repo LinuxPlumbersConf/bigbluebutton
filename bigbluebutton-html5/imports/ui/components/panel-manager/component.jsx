@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import BreakoutRoomContainer from '/imports/ui/components/breakout-room/container';
 import UserListContainer from '/imports/ui/components/user-list/container';
 import ChatContainer from '/imports/ui/components/chat/container';
+import MatrixContainer from '/imports/ui/components/matrix/container';
 import NoteContainer from '/imports/ui/components/note/container';
 import PollContainer from '/imports/ui/components/poll/container';
 import CaptionsContainer from '/imports/ui/components/captions/pad/container';
@@ -19,6 +20,8 @@ import {
   CHAT_MAX_WIDTH,
   POLL_MIN_WIDTH,
   POLL_MAX_WIDTH,
+  MATRIX_MIN_WIDTH,
+  MATRIX_MAX_WIDTH,
   NOTE_MIN_WIDTH,
   NOTE_MAX_WIDTH,
   BREAKOUT_MIN_WIDTH,
@@ -29,6 +32,10 @@ const intlMessages = defineMessages({
   chatLabel: {
     id: 'app.chat.label',
     description: 'Aria-label for Chat Section',
+  },
+  matrixLabel: {
+    id: 'app.matrix.label',
+    description: 'Aria-label for Matrix Section',
   },
   noteLabel: {
     id: 'app.note.label',
@@ -75,6 +82,7 @@ class PanelManager extends Component {
     this.breakoutroomKey = _.uniqueId('breakoutroom-');
     this.chatKey = _.uniqueId('chat-');
     this.pollKey = _.uniqueId('poll-');
+    this.matrixKey = _.uniqueId('matrix-');
     this.noteKey = _.uniqueId('note-');
     this.captionsKey = _.uniqueId('captions-');
     this.waitingUsers = _.uniqueId('waitingUsers-');
@@ -85,6 +93,7 @@ class PanelManager extends Component {
     this.state = {
       userlistWidth: userListSize.width,
       chatWidth: chatSize.width,
+      matrixWidth: DEFAULT_PANEL_WIDTH,
       noteWidth: DEFAULT_PANEL_WIDTH,
       captionsWidth: DEFAULT_PANEL_WIDTH,
       pollWidth: DEFAULT_PANEL_WIDTH,
@@ -99,6 +108,7 @@ class PanelManager extends Component {
     const {
       userlistWidth,
       chatWidth,
+      matrixWidth,
       noteWidth,
       captionsWidth,
       pollWidth,
@@ -109,6 +119,7 @@ class PanelManager extends Component {
     const {
       userListSize,
       chatSize,
+      matrixSize,
       noteSize,
       captionsSize,
       pollSize,
@@ -119,6 +130,7 @@ class PanelManager extends Component {
     const {
       userListSize: oldUserListSize,
       chatSize: oldChatSize,
+      matrixSize: oldMatrixSize,
       noteSize: oldNoteSize,
       captionsSize: oldCaptionsSize,
       pollSize: oldPollSize,
@@ -131,6 +143,9 @@ class PanelManager extends Component {
     }
     if (chatSize.width !== oldChatSize.width && chatSize.width !== chatWidth) {
       this.setChatWidth(chatSize.width);
+    }
+    if (matrixSize.width !== oldMatrixSize.width && matrixSize.width !== matrixWidth) {
+      this.setMatrixWidth(matrixSize.width);
     }
     if (noteSize.width !== oldNoteSize.width && noteSize.width !== noteWidth) {
       this.setNoteWidth(noteSize.width);
@@ -156,6 +171,10 @@ class PanelManager extends Component {
 
   setChatWidth(chatWidth) {
     this.setState({ chatWidth });
+  }
+
+  setMatrixWidth(matrixWidth) {
+    this.setState({ matrixWidth });
   }
 
   setNoteWidth(noteWidth) {
@@ -207,6 +226,24 @@ class PanelManager extends Component {
         type: 'setChatSize',
         value: {
           width: chatWidth + addvalue,
+        },
+      },
+    );
+
+    window.dispatchEvent(new Event('panelChanged'));
+  }
+
+  matrixResizeStop(addvalue) {
+    const { matrixWidth } = this.state;
+    const { layoutContextDispatch } = this.props;
+
+    this.setMatrixWidth(matrixWidth + addvalue);
+
+    layoutContextDispatch(
+      {
+        type: 'setMatrixSize',
+        value: {
+          width: matrixWidth + addvalue,
         },
       },
     );
@@ -403,6 +440,53 @@ class PanelManager extends Component {
         }}
       >
         {this.renderChat()}
+      </Resizable>
+    );
+  }
+
+  renderMatrix() {
+    const { intl, enableResize } = this.props;
+
+    return (
+      <section
+        id="matrixPanel"
+        className={styles.matrix}
+        aria-label={intl.formatMessage(intlMessages.matrixLabel)}
+        key={enableResize ? null : this.matrixKey}
+      >
+        <MatrixContainer />
+      </section>
+    );
+  }
+
+  renderMatrixResizable() {
+    const { matrixWidth } = this.state;
+    const { isRTL } = this.props;
+
+    const resizableEnableOptions = {
+      top: false,
+      right: !isRTL,
+      bottom: false,
+      left: !!isRTL,
+      topRight: false,
+      bottomRight: false,
+      bottomLeft: false,
+      topLeft: false,
+    };
+
+    return (
+      <Resizable
+        minWidth={MATRIX_MIN_WIDTH}
+        maxWidth={MATRIX_MAX_WIDTH}
+        ref={(node) => { this.resizableMatrix = node; }}
+        enable={resizableEnableOptions}
+        key={this.matrixKey}
+        size={{ width: matrixWidth }}
+        onResizeStop={(e, direction, ref, d) => {
+          this.matrixResizeStop(d.width);
+        }}
+      >
+        {this.renderMatrix()}
       </Resizable>
     );
   }
@@ -653,6 +737,14 @@ class PanelManager extends Component {
         panels.push(this.renderChatResizable());
       } else {
         panels.push(this.renderChat());
+      }
+    }
+
+    if (openPanel === 'matrix') {
+      if (enableResize) {
+        panels.push(this.renderMatrixResizable());
+      } else {
+        panels.push(this.renderMatrix());
       }
     }
 
