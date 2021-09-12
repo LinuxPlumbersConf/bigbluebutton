@@ -20,6 +20,8 @@ const CHAT_MIN_WIDTH = 320;
 const CHAT_MAX_WIDTH = 400;
 const POLL_MIN_WIDTH = 320;
 const POLL_MAX_WIDTH = 400;
+const MATRIX_MIN_WIDTH = 340;
+const MATRIX_MAX_WIDTH = 800;
 const NOTE_MIN_WIDTH = 340;
 const NOTE_MAX_WIDTH = 800;
 const WAITING_MIN_WIDTH = 340;
@@ -106,7 +108,7 @@ class LayoutManagerComponent extends Component {
     window.addEventListener('webcamPlacementChange', () => {
       this.setLayoutSizes(false, false, true);
     });
-    
+
     window.addEventListener('fullscreenchange', () => {
       setTimeout(() => this.setLayoutSizes(), 200);
     });
@@ -120,7 +122,7 @@ class LayoutManagerComponent extends Component {
     const { layoutContextState, screenIsShared } = this.props;
     const {
       layoutContextState: prevLayoutContextState,
-      screenIsShared: prevScreenIsShared
+      screenIsShared: prevScreenIsShared,
     } = prevProps;
     const {
       numUsersVideo,
@@ -188,6 +190,14 @@ class LayoutManagerComponent extends Component {
         type: 'setPollSize',
         value: {
           width: layoutSizes.pollSize.width,
+        },
+      },
+    );
+    layoutContextDispatch(
+      {
+        type: 'setMatrixSize',
+        value: {
+          width: layoutSizes.matrixSize.width,
         },
       },
     );
@@ -262,6 +272,9 @@ class LayoutManagerComponent extends Component {
       pollSize: {
         width: layoutSizes.pollSize.width,
       },
+      matrixSize: {
+        width: layoutSizes.matrixSize.width,
+      },
       noteSize: {
         width: layoutSizes.noteSize.width,
       },
@@ -306,7 +319,8 @@ class LayoutManagerComponent extends Component {
       return;
     }
 
-    if (!isMobile && ((mediaAreaWidth - presentationWidth) > (mediaAreaHeight - presentationHeight))) {
+    if (!isMobile && ((mediaAreaWidth - presentationWidth)
+     > (mediaAreaHeight - presentationHeight))) {
       layoutContextDispatch(
         {
           type: 'setWebcamsPlacement',
@@ -331,6 +345,7 @@ class LayoutManagerComponent extends Component {
       userListSize: userListSizeContext,
       chatSize: chatSizeContext,
       pollSize: pollSizeContext,
+      matrixSize: matrixSizeContext,
       noteSize: noteSizeContext,
       captionsSize: captionsSizeContext,
       waitingSize: waitingSizeContext,
@@ -342,6 +357,7 @@ class LayoutManagerComponent extends Component {
     let storageUserListWidth;
     let storageChatWidth;
     let storagePollWidth;
+    let storageMatrixWidth;
     let storageNoteWidth;
     let storageCaptionsWidth;
     let storageWaitingWidth;
@@ -351,6 +367,7 @@ class LayoutManagerComponent extends Component {
       storageUserListWidth = storageLData.userListSize?.width;
       storageChatWidth = storageLData.chatSize?.width;
       storagePollWidth = storageLData.pollSize?.width;
+      storageMatrixWidth = storageLData.matrixSize?.width;
       storageNoteWidth = storageLData.noteSize?.width;
       storageCaptionsWidth = storageLData.captionsSize?.width;
       storageWaitingWidth = storageLData.waitingSize?.width;
@@ -360,6 +377,7 @@ class LayoutManagerComponent extends Component {
     let newUserListSize;
     let newChatSize;
     let newPollSize;
+    let newMatrixSize;
     let newNoteSize;
     let newCaptionsSize;
     let newWaitingSize;
@@ -398,6 +416,18 @@ class LayoutManagerComponent extends Component {
     } else {
       newPollSize = {
         width: storagePollWidth,
+      };
+    }
+
+    if (panelChanged && matrixSizeContext.width !== 0) {
+      newMatrixSize = matrixSizeContext;
+    } else if (!storageMatrixWidth) {
+      newMatrixSize = {
+        width: min(max((windowWidth() * 0.2), MATRIX_MIN_WIDTH), MATRIX_MAX_WIDTH),
+      };
+    } else {
+      newMatrixSize = {
+        width: storageMatrixWidth,
       };
     }
 
@@ -460,6 +490,9 @@ class LayoutManagerComponent extends Component {
         newPollSize = {
           width: 0,
         };
+        newMatrixSize = {
+          width: 0,
+        };
         newNoteSize = {
           width: 0,
         };
@@ -475,7 +508,31 @@ class LayoutManagerComponent extends Component {
         newChatSize = {
           width: 0,
         };
+        newMatrixSize = {
+          width: 0,
+        };
         newNoteSize = {
+          width: 0,
+        };
+        newBreakoutRoomSize = {
+          width: 0,
+        };
+        newCaptionsSize = {
+          width: 0,
+        };
+        newWaitingSize = {
+          width: 0,
+        };
+        break;
+      }
+      case 'matrix': {
+        newChatSize = {
+          width: 0,
+        };
+        newNoteSize = {
+          width: 0,
+        };
+        newPollSize = {
           width: 0,
         };
         newBreakoutRoomSize = {
@@ -494,6 +551,9 @@ class LayoutManagerComponent extends Component {
           width: 0,
         };
         newPollSize = {
+          width: 0,
+        };
+        newMatrixSize = {
           width: 0,
         };
         newBreakoutRoomSize = {
@@ -517,6 +577,9 @@ class LayoutManagerComponent extends Component {
         newBreakoutRoomSize = {
           width: 0,
         };
+        newMatrixSize = {
+          width: 0,
+        };
         newNoteSize = {
           width: 0,
         };
@@ -535,6 +598,9 @@ class LayoutManagerComponent extends Component {
         newBreakoutRoomSize = {
           width: 0,
         };
+        newMatrixSize = {
+          width: 0,
+        };
         newNoteSize = {
           width: 0,
         };
@@ -548,6 +614,9 @@ class LayoutManagerComponent extends Component {
           width: 0,
         };
         newPollSize = {
+          width: 0,
+        };
+        newMatrixSize = {
           width: 0,
         };
         newNoteSize = {
@@ -566,6 +635,9 @@ class LayoutManagerComponent extends Component {
           width: 0,
         };
         newPollSize = {
+          width: 0,
+        };
+        newMatrixSize = {
           width: 0,
         };
         newNoteSize = {
@@ -592,6 +664,9 @@ class LayoutManagerComponent extends Component {
         newPollSize = {
           width: 0,
         };
+        newMatrixSize = {
+          width: 0,
+        };
         newNoteSize = {
           width: 0,
         };
@@ -612,6 +687,7 @@ class LayoutManagerComponent extends Component {
       newUserListSize,
       newChatSize,
       newPollSize,
+      newMatrixSize,
       newNoteSize,
       newCaptionsSize,
       newWaitingSize,
@@ -742,6 +818,7 @@ class LayoutManagerComponent extends Component {
       newUserListSize,
       newChatSize,
       newPollSize,
+      newMatrixSize,
       newNoteSize,
       newCaptionsSize,
       newWaitingSize,
@@ -758,6 +835,8 @@ class LayoutManagerComponent extends Component {
       secondPanel = newChatSize;
     } else if (newPollSize.width > 0) {
       secondPanel = newPollSize;
+    } else if (newMatrixSize.width > 0) {
+      secondPanel = newMatrixSize;
     } else if (newNoteSize.width > 0) {
       secondPanel = newNoteSize;
     } else if (newCaptionsSize.width > 0) {
@@ -780,7 +859,10 @@ class LayoutManagerComponent extends Component {
       left: firstPanel.width + secondPanel.width,
     };
 
-    const { presentationWidth, presentationHeight } = LayoutManagerComponent.calculatesPresentationSize(
+    const {
+      presentationWidth,
+      presentationHeight,
+    } = LayoutManagerComponent.calculatesPresentationSize(
       mediaAreaWidth, mediaAreaHeight, presentationSlideWidth, presentationSlideHeight,
     );
 
@@ -818,6 +900,7 @@ class LayoutManagerComponent extends Component {
       userListSize: newUserListSize,
       chatSize: newChatSize,
       pollSize: newPollSize,
+      matrixSize: newMatrixSize,
       noteSize: newNoteSize,
       captionsSize: newCaptionsSize,
       waitingSize: newWaitingSize,
@@ -829,7 +912,7 @@ class LayoutManagerComponent extends Component {
   }
 
   render() {
-    return <Fragment />;
+    return <></>;
   }
 }
 
@@ -841,6 +924,8 @@ export {
   CHAT_MAX_WIDTH,
   POLL_MIN_WIDTH,
   POLL_MAX_WIDTH,
+  MATRIX_MIN_WIDTH,
+  MATRIX_MAX_WIDTH,
   NOTE_MIN_WIDTH,
   NOTE_MAX_WIDTH,
   WAITING_MIN_WIDTH,

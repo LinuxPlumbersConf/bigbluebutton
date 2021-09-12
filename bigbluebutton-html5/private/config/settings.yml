@@ -426,6 +426,9 @@ public:
       chat_poll_result: PUBLIC_CHAT_POLL_RESULT
     typingIndicator:
       enabled: true
+  matrix:
+    enabled: true
+    url: '/riot-embedded/index.html'
   note:
     enabled: true
     url: ETHERPAD_HOST
