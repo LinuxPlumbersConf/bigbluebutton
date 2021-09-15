@@ -88,6 +88,7 @@ class UserMatrix extends Component {
         aria-label={intl.formatMessage(intlMessages.Matrix)}
         aria-describedby="lockedMatrix"
         role="button"
+        id="matrix-toggle-button"
         tabIndex={0}
         className={styles.listItem}
         onClick={MatrixService.toggleMatrixPanel}
