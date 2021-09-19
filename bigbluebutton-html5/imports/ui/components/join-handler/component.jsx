@@ -161,6 +161,15 @@ class JoinHandler extends Component {
     const setCustomData = (resp) => {
       const { customdata } = resp;
 
+      // Can't figure out how to get the customdata out of
+      // UserSettings. Giving up, shoving them into the session
+      for (var i = 0; i < customdata.length; i++) {
+          var urlparameter = customdata[i];
+          for (const [key, value] of Object.entries(urlparameter)) {
+            Session.set(key, value);
+          }
+      }
+
       return new Promise((resolve) => {
         if (customdata.length) {
           makeCall('addUserSettings', customdata).then(r => resolve(r));

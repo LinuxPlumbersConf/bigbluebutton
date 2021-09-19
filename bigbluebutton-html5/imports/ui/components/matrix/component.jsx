@@ -56,9 +56,12 @@ class Matrix extends Component {
     ).metadataProp;
 
     const matrixRoomID = prop.metadata ? prop.metadata.matrixroomid : null;
+    const urlemail = Session.get('mail');
+    const urlregcode = Session.get('regcode');
 
     const matrixtitle = `Matrix integration for ${Auth.confname}`;
-    const matrixurl = `/riot-embedded/index.html?urlroomid=${matrixRoomID}&urluserid=${Auth.fullname}`;
+    const matrixurl = `/riot-embedded/index.html?urlroomid=${matrixRoomID}&urlemail=${urlemail}&urlregcode=${urlregcode}`;
+
     return (
       <div
         data-test="matrix"
