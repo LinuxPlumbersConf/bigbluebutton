@@ -62,6 +62,9 @@ const currentParameters = [
   'bbb_hide_actions_bar',
   'bbb_hide_nav_bar',
   'bbb_change_layout',
+  // CUSTOM LPC
+  'mail',
+  'regcode',
 ];
 
 function valueParser(val) {
