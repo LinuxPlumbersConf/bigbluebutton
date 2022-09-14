@@ -381,6 +381,7 @@ const isMeetingLocked = (id) => {
       || lockSettings.disableMic
       || lockSettings.disablePrivateChat
       || lockSettings.disablePublicChat
+      || lockSettings.disableMatrix
       || lockSettings.disableNotes
       || lockSettings.hideUserList
       || lockSettings.hideViewersCursor
