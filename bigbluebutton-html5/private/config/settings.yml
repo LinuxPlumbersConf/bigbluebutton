@@ -545,6 +545,9 @@ public:
       frequentEmojiSortOnClick: false
     # e.g.: disableEmojis: ['1F595','1F922']
     disableEmojis: []
+  matrix:
+    enabled: false
+    id: matrix
   notes:
     enabled: true
     id: notes

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Styled from './styles';
 import UserParticipantsContainer from './user-participants/container';
 import UserMessagesContainer from './user-messages/container';
+import UserMatrixContainer from './user-matrix/container';
 import UserNotesContainer from './user-notes/container';
 import UserCaptionsContainer from './user-captions/container';
 import WaitingUsersContainer from './waiting-users/container';
@@ -34,6 +35,7 @@ class UserContent extends PureComponent {
       <Styled.Content data-test="userListContent">
         {isChatEnabled() ? <UserMessagesContainer /> : null}
         {currentUser.role === ROLE_MODERATOR ? <UserCaptionsContainer /> : null}
+        <UserMatrixContainer />
         <UserNotesContainer />
         {showWaitingRoom && currentUser.role === ROLE_MODERATOR
           ? (

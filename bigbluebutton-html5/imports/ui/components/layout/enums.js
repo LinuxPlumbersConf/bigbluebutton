@@ -105,6 +105,7 @@ export const PANELS = {
   POLL: 'poll',
   CAPTIONS: 'captions',
   BREAKOUT: 'breakoutroom',
+  MATRIX: 'matrix',
   SHARED_NOTES: 'shared-notes',
   WAITING_USERS: 'waiting-users',
   NONE: 'none',
