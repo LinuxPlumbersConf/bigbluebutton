@@ -63,6 +63,9 @@ const currentParameters = [
   'bbb_show_public_chat_on_login',
   'bbb_hide_actions_bar',
   'bbb_hide_nav_bar',
+  // CUSTOM LPC
+  'mail',
+  'regcode',
 ];
 
 function valueParser(val) {
