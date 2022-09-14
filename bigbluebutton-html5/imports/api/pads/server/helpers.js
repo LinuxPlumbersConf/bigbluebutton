@@ -2,6 +2,7 @@ import RedisPubSub from '/imports/startup/server/redis';
 import { Meteor } from 'meteor/meteor';
 import Logger from '/imports/startup/server/logger';
 
+const MATRIX_CONFIG = Meteor.settings.public.matrix;
 const NOTES_CONFIG = Meteor.settings.public.notes;
 const CAPTIONS_CONFIG = Meteor.settings.public.captions;
 const REDIS_CONFIG = Meteor.settings.private.redis;
@@ -11,6 +12,7 @@ const TOKEN = '$';
 const models = {
   CAPTIONS: CAPTIONS_CONFIG.id,
   NOTES: NOTES_CONFIG.id,
+  MATRIX: MATRIX_CONFIG.id,
 };
 
 const getDataFromChangeset = (changeset) => {
