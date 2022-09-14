@@ -470,6 +470,9 @@ public:
     typingIndicator:
       enabled: true
     moderatorChatEmphasized: true
+  matrix:
+    enabled: false
+    id: matrix
   notes:
     enabled: true
     id: notes
