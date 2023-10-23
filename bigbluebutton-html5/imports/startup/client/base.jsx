@@ -193,6 +193,19 @@ class Base extends Component {
               type: ACTIONS.SET_ID_CHAT_OPEN,
               value: PUBLIC_CHAT_ID,
             });
+          } else if (getFromUserSettings('bbb_show_public_chat_on_login', !Meteor.settings.public.matrix.startClosed)) {
+            layoutContextDispatch({
+              type: ACTIONS.SET_SIDEBAR_NAVIGATION_IS_OPEN,
+              value: true,
+            });
+            layoutContextDispatch({
+              type: ACTIONS.SET_SIDEBAR_CONTENT_IS_OPEN,
+              value: true,
+            });
+            layoutContextDispatch({
+              type: ACTIONS.SET_SIDEBAR_CONTENT_PANEL,
+              value: PANELS.MATRIX,
+            });
           } else {
             layoutContextDispatch({
               type: ACTIONS.SET_SIDEBAR_NAVIGATION_IS_OPEN,
