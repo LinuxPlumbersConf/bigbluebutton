@@ -37,6 +37,7 @@ const Matrix = ({
   intl,
   layoutContextDispatch,
   isResizing,
+  isVisible,
 }) => {
   const { isChrome } = browserInfo;
 
@@ -52,7 +53,11 @@ const Matrix = ({
   const matrixurl = `/riot-embedded/index.html?urlroomid=${matrixRoomID}&urlemail=${urlemail}&urlregcode=${urlregcode}`;
 
   return (
-    <Styled.Matrix data-test="matrix" isChrome={isChrome}>
+    <Styled.Matrix
+	data-test="matrix"
+	isChrome={isChrome}
+	style={{ visibility: isVisible ? 'visible' : 'hidden', }}
+     >
       <Header
         leftButtonProps={{
           onClick: () => {

@@ -142,7 +142,7 @@ const SidebarContent = (props) => {
           isToSharedNotesBeShow={sidebarContentPanel === PANELS.SHARED_NOTES}
         />
       )}
-      {sidebarContentPanel === PANELS.MATRIX && <MatrixContainer />}
+      <MatrixContainer isVisible={sidebarContentPanel === PANELS.MATRIX}/>
       {sidebarContentPanel === PANELS.SHARED_NOTES && <NotesContainer />}
       {sidebarContentPanel === PANELS.CAPTIONS && <CaptionsContainer />}
       {sidebarContentPanel === PANELS.BREAKOUT && <BreakoutRoomContainer />}
