@@ -56,7 +56,7 @@ const Matrix = ({
     <Styled.Matrix
 	data-test="matrix"
 	isChrome={isChrome}
-	style={{ visibility: isVisible ? 'visible' : 'hidden', }}
+	style={ isVisible ? {} : {display: 'none'}}
      >
       <Header
         leftButtonProps={{
