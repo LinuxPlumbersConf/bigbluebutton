@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Resizable } from 're-resizable';
 import { ACTIONS, PANELS } from '../layout/enums';
 import ChatContainer from '/imports/ui/components/chat/chat-graphql/component';
+import MatrixContainer from '/imports/ui/components/matrix/component';
 import NotesContainer from '/imports/ui/components/notes/component';
 import PollContainer from '/imports/ui/components/poll/container';
 import BreakoutRoomContainer from '../breakout-room/breakout-room/component';
@@ -148,6 +149,7 @@ const SidebarContent = (props) => {
           isToSharedNotesBeShow={sidebarContentPanel === PANELS.SHARED_NOTES}
         />
       )}
+      <MatrixContainer isVisible={sidebarContentPanel === PANELS.MATRIX} />
       {sidebarContentPanel === PANELS.BREAKOUT && <BreakoutRoomContainer />}
       {sidebarContentPanel === PANELS.TIMER && <TimerContainer isModerator={amIModerator} />}
       {sidebarContentPanel === PANELS.WAITING_USERS && <GuestUsersManagementPanel />}

@@ -36,6 +36,10 @@ export function useIsChatEnabled() {
   return useDisabledFeatures().indexOf('chat') === -1 && window.meetingClientSettings.public.chat.enabled;
 }
 
+export function useIsMatrixEnabled() {
+  return useDisabledFeatures().indexOf('matrix') === -1 && window.meetingClientSettings.public.matrix.enabled;
+}
+
 export function useIsSharedNotesEnabled() {
   return useDisabledFeatures().indexOf('sharedNotes') === -1 && window.meetingClientSettings.public.notes.enabled;
 }

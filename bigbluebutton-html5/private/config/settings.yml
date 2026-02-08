@@ -808,6 +808,10 @@ public:
         native: '👍'
       - id: 'clap'
         native: '👏'
+  matrix:
+    enabled: false
+    id: matrix
+    startClosed: true
   notes:
     enabled: true
     id: notes

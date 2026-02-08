@@ -15,7 +15,7 @@ import getFromUserSettings from '/imports/ui/services/users-settings';
 import useMeeting from '/imports/ui/core/hooks/useMeeting';
 import MediaService from '/imports/ui/components/media/service';
 import { useVideoStreams, useVideoStreamsCount } from '/imports/ui/components/video-provider/hooks';
-import { useIsChatEnabled, useIsPresentationEnabled, useIsScreenSharingEnabled } from '/imports/ui/services/features';
+import { useIsChatEnabled, useIsMatrixEnabled, useIsPresentationEnabled, useIsScreenSharingEnabled } from '/imports/ui/services/features';
 import useUserChangedLocalSettings from '/imports/ui/services/settings/hooks/useUserChangedLocalSettings';
 import Session from '/imports/ui/services/storage/in-memory';
 import deviceInfo from '/imports/utils/deviceInfo';
@@ -49,6 +49,7 @@ const LayoutObserver: React.FC = () => {
   const isScreenSharingEnabled = useIsScreenSharingEnabled();
   const isPresentationEnabled = useIsPresentationEnabled();
   const isChatEnabled = useIsChatEnabled();
+  const isMatrixEnabled = useIsMatrixEnabled();
 
   const setLocalSettings = useUserChangedLocalSettings();
 
@@ -219,7 +220,30 @@ const LayoutObserver: React.FC = () => {
 
   useEffect(() => {
     if (layoutIsReady) {
-      if (isChatEnabled && getFromUserSettings('bbb_show_public_chat_on_login', !window.meetingClientSettings.public.chat.startClosed) && !deviceInfo.isPhone) {
+      const matrixRoomId = getFromUserSettings('matrixroomid', '');
+      const showMatrixOnLogin = isMatrixEnabled
+        && matrixRoomId
+        && getFromUserSettings('bbb_show_matrix_on_login', !window.meetingClientSettings.public.matrix?.startClosed)
+        && !deviceInfo.isPhone;
+      const showChatOnLogin = isChatEnabled
+        && getFromUserSettings('bbb_show_public_chat_on_login', !window.meetingClientSettings.public.chat.startClosed)
+        && !deviceInfo.isPhone;
+
+      if (showMatrixOnLogin && !showChatOnLogin) {
+        // Open Matrix panel if Matrix is configured and chat is not set to open
+        layoutContextDispatch({
+          type: ACTIONS.SET_SIDEBAR_NAVIGATION_IS_OPEN,
+          value: true,
+        });
+        layoutContextDispatch({
+          type: ACTIONS.SET_SIDEBAR_CONTENT_IS_OPEN,
+          value: true,
+        });
+        layoutContextDispatch({
+          type: ACTIONS.SET_SIDEBAR_CONTENT_PANEL,
+          value: PANELS.MATRIX,
+        });
+      } else if (showChatOnLogin) {
         const PUBLIC_CHAT_ID = window.meetingClientSettings.public.chat.public_group_id;
         layoutContextDispatch({
           type: ACTIONS.SET_SIDEBAR_CONTENT_IS_OPEN,
@@ -240,7 +264,7 @@ const LayoutObserver: React.FC = () => {
         });
       }
     }
-  }, [isChatEnabled, layoutIsReady]);
+  }, [isChatEnabled, isMatrixEnabled, layoutIsReady]);
 
   useEffect(() => {
     if (layoutIsReady && sidebarContentPanel === PANELS.NONE) {
