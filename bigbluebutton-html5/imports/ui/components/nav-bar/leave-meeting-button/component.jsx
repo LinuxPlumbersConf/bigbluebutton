@@ -6,6 +6,7 @@ import BBBMenu from '/imports/ui/components/common/menu/component';
 import Styled from './styles';
 import Session from '/imports/ui/services/storage/in-memory';
 import { ModalRegistration } from '/imports/ui/core/singletons/modalController';
+import { colorDanger, colorWhite } from '/imports/ui/stylesheets/styled-components/palette';
 
 const intlMessages = defineMessages({
   leaveMeetingBtnLabel: {
@@ -121,6 +122,7 @@ class LeaveMeetingButton extends PureComponent {
           icon: 'close',
           label: intl.formatMessage(intlMessages.endMeetingLabel),
           description: intl.formatMessage(intlMessages.endMeetingDesc),
+          customStyles: { background: colorDanger, color: colorWhite },
           onClick: () => this.setEndMeetingConfirmationModalIsOpen(true),
         },
       );
